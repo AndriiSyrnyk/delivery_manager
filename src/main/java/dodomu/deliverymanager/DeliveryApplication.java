@@ -1,4 +1,4 @@
-package dodomu.deliverymanager.delivery;
+package dodomu.deliverymanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
