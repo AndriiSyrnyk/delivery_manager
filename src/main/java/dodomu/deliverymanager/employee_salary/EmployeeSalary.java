@@ -15,6 +15,7 @@ public class EmployeeSalary {
 //
 //    @Column(name = "salary_id")
 //    private int salaryId;
+    @EmbeddedId
     private EmployeeSalaryId id;
 
     @ManyToOne

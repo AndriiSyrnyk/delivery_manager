@@ -1,12 +1,10 @@
 package dodomu.deliverymanager.street;
 
-import dodomu.deliverymanager.locality_street.LocalityStreet;
+import dodomu.deliverymanager.locality.Locality;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.util.Set;
 
 @Data
 @Entity
@@ -19,6 +17,7 @@ public class Street {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "street")
-    private Set<LocalityStreet> localityStreets;
+    @ManyToOne
+    @JoinColumn(name="locality_id")
+    private Locality locality;
 }

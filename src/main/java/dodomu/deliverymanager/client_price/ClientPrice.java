@@ -28,6 +28,7 @@ public class ClientPrice {
 //    @JoinColumn(name = "price_id")
 //    private Price price;
 
+    @EmbeddedId
     private ClientPriceId id;
 
     @ManyToOne
