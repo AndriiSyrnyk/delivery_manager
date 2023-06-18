@@ -17,7 +17,7 @@
             <input minlength="3" maxlength="40" class="form-control" type="text" id="name" name="name" th:value="${street.name}" required>
             <br>
             <button class="btn btn-success" type="submit">Редагувати</button>
-            <a class="btn btn-success" th:href="@{/street/list(localityId=${street.getLocality().getId()})}">Повернутися</a>
+            <a class="btn btn-outline-success" th:href="@{/street/list(localityId=${street.getLocality().getId()})}">Повернутися</a>
         </form>
     </div>
 </div>

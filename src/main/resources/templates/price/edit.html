@@ -9,14 +9,14 @@
 <body>
 <div class="container">
     <div class="header-container">
-        <h1 th:text="'Редугвати населений пункт:'"></h1>
-        <form method="post" th:object="${locality}" action="/locality/edit">
-            <input type="hidden" class="form-control" id="id" name="id" th:value="${locality.id}">
-            <label class="form-label" for="name">Назва:</label>
-            <input minlength="3" maxlength="20" class="form-control" type="text" id="name" name="name" th:value="${locality.name}" required>
+        <h1 th:text="'Редугвати ціну:'"></h1>
+        <form method="post" th:object="${price}" action="/price/edit">
+            <input type="hidden" class="form-control" id="id" name="id" th:value="${price.id}">
+            <label class="form-label" for="value">Ціна:</label>
+            <input maxlength="5" class="form-control" type="number" min="0" step="1" id="value" name="value" th:value="${price.value}">
             <br>
             <button class="btn btn-success" type="submit">Редагувати</button>
-            <a class="btn btn-outline-success" href="/locality/list">Повернутися</a>
+            <a class="btn btn-outline-success" href="/price/list">Повернутися</a>
         </form>
     </div>
 </div>

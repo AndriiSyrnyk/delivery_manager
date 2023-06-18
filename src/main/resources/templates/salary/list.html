@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8">
-        <title>All clients</title>
+        <title>All salaries</title>
         <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
               rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -32,46 +32,36 @@
                 <div class="container-fluid">
                     <div class="mb-3">
                         <div class="header-container">
-                            <h1 th:text="'Список вулиць: ' + ${streetList.size()}"></h1>
+                            <h1 th:text="'Список зарплат: ' + ${salaryList.size()}"></h1>
                         </div>
-                        <form id="localityForm" th:action="@{/street/list}" method="get">
-                            <label class="form-label" for="localityId">Населений пункт:</label>
-                            <select class="form-select" style="width:auto" id="localityId" name="localityId" onchange="submitLocalityForm()">
-                                <option th:each="locality : ${localityList}"
-                                        th:value="${locality.getId()}"
-                                        th:text="${locality.getName()}"
-                                        th:selected="${selectedLocalityId != 0 and locality.getId() == selectedLocalityId}">
-                                </option>
-                            </select>
-                        </form>
-                        </br>
                         <table class="table table-light table-striped" style="width:70%">
                             <thead>
                             <tr>
-                                <th scope="col" style="width:80%">Назва</th>
+                                <th scope="col" style="width:27%">Плата за доставку</th>
+                                <th scope="col" style="width:27%">Плата за годину</th>
+                                <th scope="col" style="width:26%">Плата за км</th>
                                 <th scope="col" style="width:10%"> </th>
                                 <th scope="col" style="width:10%">
-                                    <form action="/street/add">
-                                        <input type="hidden" name="localityId" th:value="${selectedLocalityId}" />
-                                        <button type="submit" class="btn btn-success" href="/street/add">Додати</button>
+                                    <form action="/salary/add">
+                                        <button type="submit" class="btn btn-success" href="/salary/add">Додати</button>
                                     </form>
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="street : ${streetList}">
-                                <td><span th:text="${street.getName()}"> </span></td>
+                            <tr th:each="salary : ${salaryList}">
+                                <td><span th:text="${salary.salaryPerDelivery}"> </span></td>
+                                <td><span th:text="${salary.salaryPerHour}"> </span></td>
+                                <td><span th:text="${salary.salaryPerKm}"> </span></td>
                                 <td>
-                                    <form th:action="@{/street/edit}">
-                                        <input type="hidden" name="id" th:value="${street.getId()}" />
-                                        <input type="hidden" name="localityId" th:value="${selectedLocalityId}" />
+                                    <form th:action="@{/salary/edit}">
+                                        <input type="hidden" name="id" th:value="${salary.getId()}" />
                                         <button type="submit" class="btn btn-outline-success">Редагувати</button>
                                     </form>
                                 </td>
                                 <td>
-                                    <form th:action="@{/street/delete}" method="post">
-                                        <input type="hidden" name="id" th:value="${street.getId()}" />
-                                        <input type="hidden" name="localityId" th:value="${selectedLocalityId}" />
+                                    <form th:action="@{/salary/delete}" method="post">
+                                        <input type="hidden" name="id" th:value="${salary.getId()}" />
                                         <button type="submit" class="btn btn-outline-success">Видалити</button>
                                     </form>
                                 </td>
@@ -83,11 +73,6 @@
             </main>
         </div>
     </div>
-        <script>
-            function submitLocalityForm() {
-                document.getElementById("localityForm").submit();
-            }
-        </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
                 crossorigin="anonymous">

@@ -1,6 +1,5 @@
 package dodomu.deliverymanager.employee;
 
-import dodomu.deliverymanager.client.Client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

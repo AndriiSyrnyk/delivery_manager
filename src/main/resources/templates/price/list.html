@@ -12,10 +12,6 @@
                 display: flex;
                 align-items: center;
             }
-
-            .header-container h1 {
-                margin-right: 10px;
-            }
         </style>
     </head>
     <body>
@@ -32,40 +28,39 @@
                     <div class="container-fluid">
                         <div class="mb-3">
                             <div class="header-container">
-                                <h1 th:text="'Список закладів: ' + ${clientList.size()}"></h1>
+                                <h1 th:text="'Список цін: ' + ${priceList.size()}"></h1>
                             </div>
                             <table class="table table-light table-striped" style="width:70%">
                                 <thead>
                                 <tr>
-                                    <th scope="col" style="width:35%">Назва</th>
-                                    <th scope="col" style="width:45%">Коментар</th>
-                                    <th scope="col" style="width:10%"></th>
+                                    <th scope="col" style="width:80%">Ціна</th>
+                                    <th scope="col" style="width:10%"> </th>
                                     <th scope="col" style="width:10%">
-                                        <form action="/client/add">
-                                            <button type="submit" class="btn btn-success" href="/client/add">Додати</button>
+                                        <form action="/price/add">
+                                            <button type="submit" class="btn btn-success" href="/price/add">Додати</button>
                                         </form>
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="client : ${clientList}">
-                                    <td><span th:text="${client.getName()}"> </span></td>
-                                    <td><span th:text="${client.getComment()}"> </span></td>
+                                <tr th:each="price : ${priceList}">
+                                    <td><span th:text="${price.value}"> </span></td>
                                     <td>
-                                        <form th:action="@{/client/edit}">
-                                            <input type="hidden" name="id" th:value="${client.getId()}" />
+                                        <form th:action="@{/price/edit}">
+                                            <input type="hidden" name="id" th:value="${price.getId()}" />
                                             <button type="submit" class="btn btn-outline-success">Редагувати</button>
                                         </form>
                                     </td>
                                     <td>
-                                        <form th:action="@{/client/delete}" method="post">
-                                            <input type="hidden" name="id" th:value="${client.getId()}" />
+                                        <form th:action="@{/price/delete}" method="post">
+                                            <input type="hidden" name="id" th:value="${price.getId()}" />
                                             <button type="submit" class="btn btn-outline-success">Видалити</button>
                                         </form>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
+                            </br>
                         </div>
                     </div>
                 </main>

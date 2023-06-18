@@ -9,14 +9,13 @@
 <body>
     <div class="container">
         <div class="header-container">
-            <h1 th:text="'Додати вулицю:'"></h1>
-            <form method="post" th:object="${street}" action="/street/add">
-                <input type="hidden" class="form-control" id="localityId" name="localityId" th:value="${street.getLocality().getId()}">
-                <label class="form-label" for="name">Назва:</label>
-                <input minlength="3" maxlength="40" class="form-control" type="text" id="name" name="name">
+            <h1 th:text="'Додати нову ціну:'"></h1>
+            <form method="post" th:object="${price}" action="/price/add">
+                <label class="form-label" for="value">Ціна:</label>
+                <input class="form-control" type="number" min="0" maxlength="5" step="1" id="value" name="value">
                 <br>
                 <button class="btn btn-success" type="submit">Додати</button>
-                <a class="btn btn-outline-success" th:href="@{/street/list(localityId=${selectedLocalityId})}">Повернутися</a>
+                <a class="btn btn-outline-success" href="/price/list">Повернутися</a>
             </form>
         </div>
     </div>
