@@ -17,4 +17,6 @@ public class Expense {
     private String name;
 
     private Date date;
+
+    private Integer value;
 }

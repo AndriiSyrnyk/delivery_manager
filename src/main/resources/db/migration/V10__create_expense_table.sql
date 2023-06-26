@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS public.expense
     id integer NOT NULL DEFAULT nextval('expense_id_seq'::regclass),
     name character varying(30) COLLATE pg_catalog."default",
     date date,
+    value integer,
     CONSTRAINT expense_pkey PRIMARY KEY (id)
 )
 

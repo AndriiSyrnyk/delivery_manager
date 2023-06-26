@@ -4,17 +4,21 @@ import dodomu.deliverymanager.employee.Employee;
 import dodomu.deliverymanager.salary.Salary;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class EmployeeSalary {
-//    @Column(name = "employee_id")
-//    private int employeeId;
-//
-//    @Column(name = "salary_id")
-//    private int salaryId;
+    public EmployeeSalary(Employee employee, Salary salary, Date date) {
+        this.id = new EmployeeSalaryId(employee.getId(), salary.getId(), date);
+        this.employee = employee;
+        this.salary = salary;
+        this.date = date;
+    }
+
     @EmbeddedId
     private EmployeeSalaryId id;
 
@@ -26,13 +30,6 @@ public class EmployeeSalary {
     @MapsId("salaryId")
     private Salary salary;
 
+    @Column(insertable = false, updatable = false)
     private Date date;
-
-//    @ManyToOne
-//    @JoinColumn(name = "employee_id")
-//    private Employee employee;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "salary_id")
-//    private Salary salary;
 }
