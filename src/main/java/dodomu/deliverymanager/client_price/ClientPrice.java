@@ -4,29 +4,21 @@ import dodomu.deliverymanager.client.Client;
 import dodomu.deliverymanager.price.Price;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.sql.Date;
 
 @Data
-@Table(name = "client_price")
 @Entity
+@NoArgsConstructor
 public class ClientPrice {
-//    @Column(name = "client_id")
-//    @ToString.Exclude
-//    private int clientId;
-//
-//    @Column(name = "price_id")
-//    @ToString.Exclude
-//    private int priceId;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "client_id")
-//    private Client client;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "price_id")
-//    private Price price;
+    public ClientPrice(Client client, Price price, Date date) {
+        this.id = new ClientPriceId(client.getId(), price.getId(), date);
+        this.client = client;
+        this.price = price;
+        this.date = date;
+    }
 
     @EmbeddedId
     private ClientPriceId id;
@@ -39,5 +31,6 @@ public class ClientPrice {
     @MapsId("priceId")
     private Price price;
 
+    @Column(insertable = false, updatable = false)
     private Date date;
 }

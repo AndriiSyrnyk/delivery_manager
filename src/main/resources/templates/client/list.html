@@ -27,6 +27,7 @@
                     <button class="btn" type="button" data-bs-theme="dark">
                         <span class="navbar-toggler-icon"></span>
                     </button>
+<!--                    <input class="form-control" style="width: auto;" type="date" id="date" name="date" required>-->
                 </nav>
                 <main class="content px-3 py-2">
                     <div class="container-fluid">
@@ -37,8 +38,9 @@
                             <table class="table table-light table-striped" style="width:70%">
                                 <thead>
                                 <tr>
-                                    <th scope="col" style="width:35%">Назва</th>
-                                    <th scope="col" style="width:45%">Коментар</th>
+                                    <th scope="col" style="width:20%">Назва</th>
+                                    <th scope="col" style="width:30%">Коментар</th>
+                                    <th scope="col" style="width:30%">Ціна</th>
                                     <th scope="col" style="width:10%"></th>
                                     <th scope="col" style="width:10%">
                                         <form action="/client/add">
@@ -51,9 +53,10 @@
                                 <tr th:each="client : ${clientList}">
                                     <td><span th:text="${client.getName()}"> </span></td>
                                     <td><span th:text="${client.getComment()}"> </span></td>
+                                    <td><span th:text="${client.getCurrentPrice()}"> </span></td>
                                     <td>
                                         <form th:action="@{/client/edit}">
-                                            <input type="hidden" name="id" th:value="${client.getId()}" />
+                                            <input type="hidden" name="clientId" th:value="${client.getId()}" />
                                             <button type="submit" class="btn btn-outline-success">Редагувати</button>
                                         </form>
                                     </td>

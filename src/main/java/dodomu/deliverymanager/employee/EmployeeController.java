@@ -48,8 +48,7 @@ public class EmployeeController {
     @PostMapping("/add")
     public String add(@ModelAttribute Employee employee, @ModelAttribute Salary salary) {
         final Employee createdEmployee = employeeService.addOrUpdate(employee);
-        final EmployeeSalary employeeSalary = new EmployeeSalary(createdEmployee, salary,
-                                                new java.sql.Date(System.currentTimeMillis()));
+        final EmployeeSalary employeeSalary = new EmployeeSalary(createdEmployee, salary, new java.sql.Date(System.currentTimeMillis()));
         employeeSalaryService.addOrUpdate(employeeSalary);
         return "redirect:/employee/list";
     }

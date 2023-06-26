@@ -10,13 +10,22 @@
 <div class="container">
     <div class="header-container">
         <h1 th:text="'Редугвати заклад:'"></h1>
-        <form method="post" th:object="${client}" action="/client/edit">
-            <input type="hidden" class="form-control" id="id" name="id" th:value="${client.id}">
+        <form id="clientForm" method="post" th:object="${client}" th:object2="${price}" action="/client/edit">
+            <input type="hidden" class="form-control" id="clientId" name="clientId" th:value="${client.id}">
             <label class="form-label" for="name">Назва:</label>
             <input minlength="3" maxlength="20" class="form-control" type="text" id="name" name="name" th:value="${client.name}" required>
             <br>
             <label class="form-label" for="comment">Коментар:</label>
             <input maxlength="50" class="form-control" type="text" id="comment" name="comment" th:value="${client.comment}">
+            <br>
+            <label class="form-label" for="price">Ціна:</label>
+            <select class="form-select" style="width:auto" id="price" name="price" onchange="submitClientForm()" required>
+                <option th:each="price : ${priceList}"
+                        th:value="${price.getId()}"
+                        th:text="${price}"
+                        th:selected="${price.getId() == currentPrice.getId()}">
+                </option>
+            </select>
             <br>
             <button class="btn btn-success" type="submit">Редагувати</button>
             <a class="btn btn-outline-success" href="/client/list">Повернутися</a>
