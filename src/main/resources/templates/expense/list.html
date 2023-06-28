@@ -23,6 +23,7 @@
                     <button class="btn" type="button" data-bs-theme="dark">
                         <span class="navbar-toggler-icon"></span>
                     </button>
+                    <input class="form-control" style="width: auto;" type="month" id="month" name="month" th:value="${month}" required>
                 </nav>
                 <main class="content px-3 py-2">
                     <div class="container-fluid">
@@ -75,5 +76,14 @@
                 crossorigin="anonymous">
         </script>
         <script th:src="@{/js/navbar.js}"></script>
+        <script>
+            var monthInput = document.getElementById("month");
+            monthInput.addEventListener("change", function() {
+                var month = monthInput.value;
+                var currentUrl = window.location.href;
+                var urlWithMonth = location.protocol + '//' + location.host + location.pathname + "?yearMonth=" + encodeURIComponent(month);
+                window.location.href = urlWithMonth;
+            });
+        </script>
     </body>
 </html>

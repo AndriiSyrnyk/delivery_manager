@@ -3,6 +3,8 @@ package dodomu.deliverymanager.expense;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -12,6 +14,13 @@ public class ExpenseService {
 
     public List<Expense> getAll() {
         return expenseRepository.findAll();
+    }
+
+    public List<Expense> getExpensesByMonth(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startOfMonth = yearMonth.atDay(1);
+        LocalDate endOfMonth = yearMonth.atEndOfMonth();
+        return expenseRepository.findByDateBetween(startOfMonth, endOfMonth);
     }
 
     public Expense addOrUpdate(Expense expense) {

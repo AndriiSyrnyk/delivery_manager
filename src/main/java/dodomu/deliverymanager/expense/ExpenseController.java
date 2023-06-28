@@ -1,10 +1,14 @@
 package dodomu.deliverymanager.expense;
 
+import dodomu.deliverymanager.utils.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RequiredArgsConstructor
 @RequestMapping("/expense")
@@ -13,9 +17,13 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @GetMapping("/list")
-    public ModelAndView getAll() {
+    public ModelAndView getAll(@RequestParam(required = false) String yearMonth) {
+        if (yearMonth == null) yearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         ModelAndView result = new ModelAndView("expense/list");
-        result.addObject("expenseList", expenseService.getAll());
+        result.addObject("expenseList", expenseService.getExpensesByMonth(
+                DateTimeUtil.getYearFromYearMonthString(yearMonth),
+                DateTimeUtil.getMonthFromYearMonthString(yearMonth)));
+        result.addObject("month", yearMonth);
         return result;
     }
 
