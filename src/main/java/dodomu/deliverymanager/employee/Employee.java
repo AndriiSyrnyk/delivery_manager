@@ -1,6 +1,5 @@
 package dodomu.deliverymanager.employee;
 
-import dodomu.deliverymanager.date_employee.DateEmployee;
 import dodomu.deliverymanager.employee_salary.EmployeeSalary;
 import dodomu.deliverymanager.schedule.Schedule;
 import jakarta.persistence.*;
@@ -25,11 +24,6 @@ public class Employee {
     @ToString.Exclude
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "employee")
     private List<EmployeeSalary> employeeSalaries;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "employee")
-    private List<DateEmployee> dateEmployees;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
