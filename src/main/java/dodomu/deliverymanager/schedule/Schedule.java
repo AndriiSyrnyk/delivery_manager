@@ -28,7 +28,4 @@ public class Schedule {
 
     @Column(name = "amount_paid")
     private Integer amountPaid;
-
-    @Column(name = "employee_priority")
-    private Integer employeePriority;
 }

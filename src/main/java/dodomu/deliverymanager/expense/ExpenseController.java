@@ -7,9 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @RequiredArgsConstructor
 @RequestMapping("/expense")
 @Controller
@@ -18,7 +15,7 @@ public class ExpenseController {
 
     @GetMapping("/list")
     public ModelAndView getAll(@RequestParam(required = false) String yearMonth) {
-        if (yearMonth == null) yearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        if (yearMonth == null) yearMonth = DateTimeUtil.getCurrentYearMonth();
         ModelAndView result = new ModelAndView("expense/list");
         result.addObject("expenseList", expenseService.getExpensesByMonth(
                 DateTimeUtil.getYearFromYearMonthString(yearMonth),
