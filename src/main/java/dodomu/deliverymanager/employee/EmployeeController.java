@@ -3,6 +3,8 @@ package dodomu.deliverymanager.employee;
 import dodomu.deliverymanager.employee_salary.EmployeeSalary;
 import dodomu.deliverymanager.employee_salary.EmployeeSalaryId;
 import dodomu.deliverymanager.employee_salary.EmployeeSalaryService;
+import dodomu.deliverymanager.employee_schedule.EmployeeSchedule;
+import dodomu.deliverymanager.employee_schedule.EmployeeScheduleService;
 import dodomu.deliverymanager.salary.Salary;
 import dodomu.deliverymanager.salary.SalaryService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,8 @@ public class EmployeeController {
     private final EmployeeSalaryService employeeSalaryService;
 
     private final EmployeeConverter employeeConverter;
+
+    private final EmployeeScheduleService employeeScheduleService;
 
     @GetMapping("/list")
     public ModelAndView getAll() {
@@ -50,6 +54,8 @@ public class EmployeeController {
         final Employee createdEmployee = employeeService.addOrUpdate(employee);
         final EmployeeSalary employeeSalary = new EmployeeSalary(createdEmployee, salary, new java.sql.Date(System.currentTimeMillis()));
         employeeSalaryService.addOrUpdate(employeeSalary);
+        final EmployeeSchedule employeeSchedule = new EmployeeSchedule(createdEmployee, employeeScheduleService.getMaxEmployeePriority());
+        employeeScheduleService.addOrUpdate(employeeSchedule);
         return "redirect:/employee/list";
     }
 

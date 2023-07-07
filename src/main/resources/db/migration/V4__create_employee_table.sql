@@ -18,4 +18,4 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.employee
     OWNER to postgres;
 
-ALTER SEQUENCE employee_id_seq OWNED BY employee.id
+ALTER SEQUENCE employee_id_seq OWNED BY employee.id;

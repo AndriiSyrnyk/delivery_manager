@@ -15,44 +15,62 @@
             </style>
     </head>
     <body>
-    <div class="wrapper">
-        <div th:replace="/navbar/navbar"></div>
+        <div class="wrapper">
+            <div th:replace="/navbar/navbar"></div>
 
-        <div class="main">
-            <nav class="navbar navbar-expand px-3 border-bottom">
-                <button class="btn" type="button" data-bs-theme="dark">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <input class="form-control" style="width: auto;" type="month" id="month" name="month" th:value="${month}" required>
-            </nav>
-            <main class="content px-3 py-2">
-                <div class="container-fluid">
-                    <div class="mb-3">
-                        <div class="header-container">
-                            <h1 th:text="'Графік:'"></h1>
+            <div class="main">
+                <nav class="navbar navbar-expand px-3 border-bottom">
+                    <button class="btn" type="button" data-bs-theme="dark">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <input class="form-control" style="width: auto;" type="month" id="month" name="month" th:value="${month}" required>
+                </nav>
+                <main class="content px-3 py-2">
+                    <div class="container-fluid">
+                        <div class="mb-3">
+                            <div class="header-container">
+                                <h1 th:text="'Графік:'"></h1>
+                            </div>
+                            <table class="table table-light table-striped" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th></th> <!-- Empty cell for spacing -->
+                                    <th th:each="employee : ${employeeList}" th:text="${employee.name}"></th>
+                                    <th scope="col" style="width:10%">
+                                        <form action="/employee_schedule/list">
+                                            <button type="submit" class="btn btn-success" href="/employee_schedule/list">Додати/приховати</button>
+                                        </form>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="date : ${dateList}">
+                                    <td th:text="${date}"></td>
+                                    <td th:each="employee : ${employeeList}">
+                                        <button type="button" th:text="Update" th:onclick="'updateData(\'' + ${employee.id} + '\', \'' + ${date} + '\')'"></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </br>
                         </div>
-                        <table class="table table-light table-striped" style="width:70%">
-
-                        </table>
-                        </br>
                     </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous">
-    </script>
-    <script th:src="@{/js/navbar.js}"></script>
-    <script>
-                var monthInput = document.getElementById("month");
-                monthInput.addEventListener("change", function() {
-                    var month = monthInput.value;
-                    var currentUrl = window.location.href;
-                    var urlWithMonth = location.protocol + '//' + location.host + location.pathname + "?yearMonth=" + encodeURIComponent(month);
-                    window.location.href = urlWithMonth;
-                });
-            </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous">
+        </script>
+        <script th:src="@{/js/navbar.js}"></script>
+        <script>
+            var monthInput = document.getElementById("month");
+            monthInput.addEventListener("change", function() {
+                var month = monthInput.value;
+                var currentUrl = window.location.href;
+                var urlWithMonth = location.protocol + '//' + location.host + location.pathname + "?yearMonth=" + encodeURIComponent(month);
+                window.location.href = urlWithMonth;
+            });
+        </script>
     </body>
 </html>

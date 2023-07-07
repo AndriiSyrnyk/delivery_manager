@@ -10,12 +10,16 @@ import java.util.List;
 public class EmployeeScheduleService {
     private final EmployeeScheduleRepository employeeScheduleRepository;
 
-    public List<EmployeeSchedule> getAll() {
-        return employeeScheduleRepository.findAll();
+    public List<EmployeeSchedule> getByYearMonth(String yearMonth) {
+        return employeeScheduleRepository.getByYearMonth(yearMonth);
     }
 
-    public EmployeeSchedule addOrUpdate(EmployeeSchedule employeeSalary) {
-        return employeeScheduleRepository.save(employeeSalary);
+    public EmployeeSchedule addOrUpdate(EmployeeSchedule employeeSchedule) {
+        return employeeScheduleRepository.save(employeeSchedule);
+    }
+
+    public List<EmployeeSchedule> addOrUpdateAll(List<EmployeeSchedule> employeeSchedules) {
+        return employeeScheduleRepository.saveAll(employeeSchedules);
     }
 
     public void deleteById(EmployeeScheduleId id) {
@@ -26,4 +30,11 @@ public class EmployeeScheduleService {
         return employeeScheduleRepository.findById(id).get();
     }
 
+    public Integer getMaxEmployeePriority() {
+        return employeeScheduleRepository.getMaxEmployeePriority();
+    }
+
+    public void deleteAllByIdNotIn(List<EmployeeScheduleId> ids) {
+        employeeScheduleRepository.deleteAllByIdNotIn(ids);
+    }
 }
