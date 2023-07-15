@@ -31,7 +31,7 @@ public class EmployeeScheduleService {
     }
 
     public Integer getMaxEmployeePriority() {
-        return employeeScheduleRepository.getMaxEmployeePriority();
+        return employeeScheduleRepository.getMaxEmployeePriority() + 1;
     }
 
     public void deleteAllByIdNotIn(List<EmployeeScheduleId> ids) {

@@ -1,6 +1,5 @@
 package dodomu.deliverymanager.employee_schedule;
 
-import dodomu.deliverymanager.employee.EmployeeService;
 import dodomu.deliverymanager.utils.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,7 +16,7 @@ public class EmployeeScheduleController {
     private final EmployeeScheduleUtil employeeScheduleUtil;
 
     @GetMapping("/list")
-    public ModelAndView getAll(@RequestParam(required = false) String yearMonth) {
+    public ModelAndView getAll(String yearMonth) {
         ModelAndView result = new ModelAndView("employee_schedule/list");
         if (yearMonth == null) yearMonth = DateTimeUtil.getCurrentYearMonth();
         result.addObject("employeeList", employeeScheduleUtil.employeeListToEmployeeDTOList(yearMonth));

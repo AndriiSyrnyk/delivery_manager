@@ -3,15 +3,17 @@ package dodomu.deliverymanager.schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
-    public List<Schedule> getAll() {
-        return scheduleRepository.findAll();
+    public List<Schedule> findByDateBetween(Date firstDate, Date lastDate) {
+        return scheduleRepository.findByDateBetween(firstDate, lastDate);
     }
 
     public Schedule addOrUpdate(Schedule employeeSalary) {
@@ -22,7 +24,7 @@ public class ScheduleService {
         scheduleRepository.deleteById(id);
     }
 
-    public Schedule getById(ScheduleId id) {
-        return scheduleRepository.findById(id).get();
+    public Optional<Schedule> getById(ScheduleId id) {
+        return scheduleRepository.findById(id);
     }
 }

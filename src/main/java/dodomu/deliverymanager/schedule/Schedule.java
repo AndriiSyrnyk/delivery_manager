@@ -3,13 +3,25 @@ package dodomu.deliverymanager.schedule;
 import dodomu.deliverymanager.employee.Employee;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.sql.Time;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Schedule {
+    public Schedule(ScheduleId id, Employee employee) {
+        this.id = id;
+        this.employee = employee;
+        this.date = id.getDate();
+    }
+
+    public Schedule(ScheduleId id) {
+        this.id = id;
+    }
+
     @EmbeddedId
     private ScheduleId id;
 
