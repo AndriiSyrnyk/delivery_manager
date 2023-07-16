@@ -1,10 +1,13 @@
 package dodomu.deliverymanager.street;
 
+import dodomu.deliverymanager.delivery.Delivery;
 import dodomu.deliverymanager.locality.Locality;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -20,4 +23,9 @@ public class Street {
     @ManyToOne
     @JoinColumn(name="locality_id")
     private Locality locality;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "street")
+    private List<Delivery> deliveries;
 }

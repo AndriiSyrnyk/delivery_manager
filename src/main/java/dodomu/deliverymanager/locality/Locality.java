@@ -1,5 +1,6 @@
 package dodomu.deliverymanager.locality;
 
+import dodomu.deliverymanager.delivery.Delivery;
 import dodomu.deliverymanager.street.Street;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,4 +22,9 @@ public class Locality {
     @ToString.Exclude
     @OneToMany(mappedBy = "locality")
     private List<Street> streets;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "locality")
+    private List<Delivery> deliveries;
 }

@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS public.delivery
     street_id integer,
     employee_id integer,
     date date,
-    creation_time character varying(5) COLLATE pg_catalog."default",
-    ready_time character varying(5) COLLATE pg_catalog."default",
-    delivery_time character varying(5) COLLATE pg_catalog."default",
+    creation_time time without time zone,
+    ready_time time without time zone,
+    delivery_time time without time zone,
     CONSTRAINT delivery_pkey PRIMARY KEY (id),
     CONSTRAINT fk_delivery_client_id FOREIGN KEY (client_id)
         REFERENCES public.client (id) MATCH SIMPLE

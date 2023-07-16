@@ -1,6 +1,7 @@
 package dodomu.deliverymanager.client;
 
 import dodomu.deliverymanager.client_price.ClientPrice;
+import dodomu.deliverymanager.delivery.Delivery;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,4 +24,9 @@ public class Client {
     @ToString.Exclude
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "client")
     private List<ClientPrice> clientPrices;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "client")
+    private List<Delivery> deliveries;
 }

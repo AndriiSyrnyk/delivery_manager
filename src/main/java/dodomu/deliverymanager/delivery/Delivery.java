@@ -1,7 +1,13 @@
 package dodomu.deliverymanager.delivery;
 
+import dodomu.deliverymanager.client.Client;
+import dodomu.deliverymanager.employee.Employee;
+import dodomu.deliverymanager.locality.Locality;
+import dodomu.deliverymanager.street.Street;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.sql.Date;
 
@@ -12,17 +18,29 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "client_id")
-    private int clientId;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name="client_id")
+    private Client client;
 
-    @Column(name = "locality_id")
-    private int localityId;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name="locality_id")
+    private Locality locality;
 
-    @Column(name = "street_id")
-    private int streetId;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name="street_id")
+    private Street street;
 
-    @Column(name = "employee_id")
-    private int employeeId;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name="employee_id")
+    private Employee employee;
 
     private Date date;
 
