@@ -20,7 +20,7 @@ public class Street {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="locality_id")
     private Locality locality;
 

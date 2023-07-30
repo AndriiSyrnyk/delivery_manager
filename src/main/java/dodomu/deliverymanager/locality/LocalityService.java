@@ -25,4 +25,8 @@ public class LocalityService {
     public Locality getById(Integer id) {
         return localityRepository.findById(id).get();
     }
+
+    public Locality getRecordWithMinId() {
+        return localityRepository.findTopByOrderByIdAsc();
+    }
 }

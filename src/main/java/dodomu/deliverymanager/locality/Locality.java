@@ -1,5 +1,6 @@
 package dodomu.deliverymanager.locality;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dodomu.deliverymanager.delivery.Delivery;
 import dodomu.deliverymanager.street.Street;
 import jakarta.persistence.*;
@@ -18,9 +19,10 @@ public class Locality {
 
     private String name;
 
+    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "locality")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "locality")
     private List<Street> streets;
 
     @EqualsAndHashCode.Exclude

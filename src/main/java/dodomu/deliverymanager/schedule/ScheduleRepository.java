@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, ScheduleId> {
     List<Schedule> findByDateBetween(Date firstDate, Date lastDate);
+
+    List<Schedule> findByDate(Date date);
 }

@@ -5,13 +5,12 @@ import dodomu.deliverymanager.employee_schedule.EmployeeSchedule;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import static dodomu.deliverymanager.utils.DateTimeUtil.*;
 
 public class ScheduleUtil {
     public static SortedMap<Date, List<ScheduleDTO>> createSchedule(
@@ -63,18 +62,5 @@ public class ScheduleUtil {
         return schedule;
     }
 
-    private static String timeToStringTime(Time time) {
-        return time.toString().substring(0, 5);
-    }
 
-    private static Time stringTimeToTime(String timeString) {
-        DateFormat timeFormat = new SimpleDateFormat("hh:mm");
-        java.util.Date parsedDate = new java.util.Date();
-        try {
-            parsedDate = timeFormat.parse(timeString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return new Time(parsedDate.getTime());
-    }
 }

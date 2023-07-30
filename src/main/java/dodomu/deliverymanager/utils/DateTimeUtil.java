@@ -3,6 +3,7 @@ package dodomu.deliverymanager.utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +20,10 @@ public class DateTimeUtil {
 
     public static @NotNull String getCurrentYearMonth() {
          return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+    }
+
+    public static Date getCurrentDate() {
+        return Date.valueOf(LocalDate.now());
     }
 
     public static List<Date> getDatesByYearMonth(String yearMonth) {
@@ -45,5 +50,15 @@ public class DateTimeUtil {
         int daysInMonth = ym.lengthOfMonth();
         LocalDate date = ym.atDay(daysInMonth);
         return Date.valueOf(date);
+    }
+
+    public static String timeToStringTime(Time time) {
+        return time.toString().substring(0, 5);
+    }
+
+    public static Time stringTimeToTime(String timeString) {
+        final int hour = Integer.parseInt(timeString.substring(0, 2));
+        final int minute = Integer.parseInt(timeString.substring(3, 5));
+        return new Time(hour, minute, 0);
     }
 }

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:position="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8">
+        <title>All clients</title>
+        <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+              rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+        <style>
+            .header-container {
+                display: flex;
+                align-items: center;
+            }
+            input[type="time"]::-webkit-calendar-picker-indicator {
+                display: none;
+            }
+    </style>
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div th:replace="/navbar/navbar"></div>
+
+            <div class="main">
+                <nav class="navbar navbar-expand px-3 border-bottom">
+                    <button class="btn" type="button" data-bs-theme="dark">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <input class="form-control" style="width: auto;" type="date" id="date" name="date" th:value="${date}" required>
+                    <h1 th:text="${deliveries.size()}"></h1>
+                </nav>
+                <main class="content px-3 py-2">
+                    <div class="container-fluid">
+                        <div class="mb-3">
+                            <table class="table table-light table-striped" style="width:800px">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="width:10%">
+                                        <form action="/delivery/add100">
+                                            <input type="hidden" name="date" th:value="${date}" />
+                                            <button type="submit" class="btn btn-success" href="/delivery/add100">+</button>
+                                        </form>
+                                    </th>
+                                    <th scope="col" style="width:20%">Заклад</th>
+                                    <th scope="col" style="width:15%">Населений пункт</th>
+                                    <th scope="col" style="width:20%">Вулиця</th>
+                                    <th scope="col" style="width:5%"></th>
+                                    <th scope="col" style="width:5%"></th>
+                                    <th scope="col" style="width:5%"></th>
+                                    <th scope="col" style="width:20%">Кур'єр</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="delivery, iterStat : ${deliveries}">
+                                        <td th:text="${iterStat.index + 1}"></td>
+                                        <td>
+                                            <form action="/delivery/editClient" method="post">
+                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                <select class="form-select" style="width: 135px" id="clientId" name="clientId"
+                                                        onchange="clientChange(this, this.value, this.getAttribute('data-delivery-id'))"
+                                                        th:data-delivery-id="${delivery.id}" onfocus="getFocus(this.value)">
+                                                    <option value="">-- Select Client --</option>
+                                                    <option th:each="client : ${clients}"
+                                                            th:value="${client.id}"
+                                                            th:text="${client.name}"
+                                                            th:selected="${delivery.client != null and client.id == delivery.client.id}">
+                                                    </option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/delivery/editLocality" method="post">
+                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                <select class="form-select" style="width: 135px" id="localityId" name="localityId"
+                                                        onchange="localityChange(this, this.value,
+                                                                                 this.getAttribute('data-delivery-id'))"
+                                                                                 th:data-delivery-id="${delivery.id}">
+                                                    <option th:each="locality : ${localities}"
+                                                            th:value="${locality.id}"
+                                                            th:text="${locality.name}"
+                                                            th:selected="${locality.id == delivery.locality.id}">
+                                                    </option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/delivery/editStreet" method="post">
+                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                <select class="form-select" style="width: 150px" th:id="'streetId-' + ${delivery.id}"
+                                                        th:name="streetId" onchange="streetChange(this)">
+                                                    <option value="">-- Select Street --</option>
+                                                    <option th:each="street : ${localitiesMap.get(delivery.locality.id).streets}"
+                                                            th:value="${street.id}"
+                                                            th:text="${street.name}"
+                                                            th:selected="${delivery.street != null and street.id == delivery.street.id}">
+                                                    </option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/delivery/editCreationTime" method="post">
+                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                <input class="form-control" style="width: auto;" type="time" th:id="'creationTime-' + ${delivery.id}"
+                                                       name="creationTime" th:value="${delivery.creationTime}"
+                                                       onblur="creationTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/delivery/editReadyTime" method="post">
+                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                <input class="form-control" style="width: auto;" type="time" th:id="'readyTime-' + ${delivery.id}"
+                                                       name="readyTime" th:value="${delivery.readyTime}"
+                                                       onblur="readyTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/delivery/editDeliveryTime" method="post">
+                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                <input class="form-control" style="width: auto;" type="time" th:id="'deliveryTime-' + ${delivery.id}"
+                                                       name="deliveryTime" th:value="${delivery.deliveryTime}"
+                                                       onblur="deliveryTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/delivery/editEmployee" method="post">
+                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                <select class="form-select" style="width: 150px" th:id="'employeeId-' + ${delivery.id}"
+                                                        th:name="employeeId" onchange="employeeChange(this)">
+                                                    <option value="">-- Select Employee --</option>
+                                                    <option th:each="employee : ${employees}"
+                                                            th:value="${employee.id}"
+                                                            th:text="${employee.name}"
+                                                            th:selected="${delivery.employee != null and employee.id == delivery.employee.id}">
+                                                    </option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous">
+        </script>
+        <script th:src="@{/js/navbar.js}"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var streetsArray = [
+                /*[# th:each="street : ${streets}"]*/
+                {
+                    id: [[${street.id}]],
+                    name: /*[[${street.name.replaceAll("'", "\\\\'")}]]*/,
+                    localityId: [[${street.locality.id}]]
+                },
+                /*[/]*/
+            ];
+            /*]]>*/
+        </script>
+        <script>
+            function submitForm(form) {
+                var formData = new FormData(form); // Create a FormData object with form data
+                var xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            console.log("Form submitted successfully");
+                        } else {
+                            console.error("Form submission failed");
+                        }
+                    }
+                };
+
+                xhr.open("POST", form.action, true);
+                xhr.send(formData);
+            }
+
+            var previousClientId;
+
+            function getFocus(clientId) {
+                previousClientId = clientId;
+            }
+
+            function clientChange(selectElement, currentClientId, deliveryId) {
+                var creationTimeTag = document.querySelector("#creationTime-" + deliveryId);
+                var creationTime = creationTimeTag.value;
+                if (previousClientId === "" && creationTime === "") {
+                    var now = new Date();
+                    var formattedTime = padZero(now.getHours()) + ":" + padZero(now.getMinutes());
+                    creationTimeTag.value = formattedTime;
+                }
+                previousClientId = currentClientId;
+                submitForm(selectElement.parentNode);
+            }
+
+            function padZero(number) {
+                return number < 10 ? "0" + number : number;
+            }
+
+            function localityChange(selectElement, localityId, deliveryId) {
+                var form = selectElement.parentNode; // Get the parent form
+                submitForm(form);
+
+                var streetsSelect = document.querySelector("#streetId-" + deliveryId); // Get the streets dropdown element
+                streetsSelect.innerHTML = "";
+                var option = document.createElement("option");
+                option.text = "-- Select Street --";
+                streetsSelect.appendChild(option);
+
+                for (var i = 0; i < streetsArray.length; i++) {
+                    if (streetsArray[i].localityId == localityId) {
+                        var option = document.createElement("option");
+                        option.value = streetsArray[i].id;
+                        option.text = streetsArray[i].name;
+                        streetsSelect.appendChild(option);
+                    }
+                }
+            }
+
+            function streetChange(selectElement) {
+                submitForm(selectElement.parentNode);
+            }
+
+            function creationTimeChange(selectElement, deliveryId) {
+                submitForm(selectElement.parentNode);
+                var timeSelect = document.querySelector("#creationTime-" + deliveryId);
+                if (timeSelect.value === "") {
+                    timeSelect.value = "";
+                }
+            }
+
+            function readyTimeChange(selectElement, deliveryId) {
+                submitForm(selectElement.parentNode);
+                var timeSelect = document.querySelector("#readyTime-" + deliveryId);
+                if (timeSelect.value === "") {
+                    timeSelect.value = "";
+                }
+            }
+
+            function deliveryTimeChange(selectElement, deliveryId) {
+                submitForm(selectElement.parentNode);
+                var timeSelect = document.querySelector("#deliveryTime-" + deliveryId);
+                if (timeSelect.value === "") {
+                    timeSelect.value = "";
+                }
+            }
+
+            function employeeChange(selectElement) {
+                submitForm(selectElement.parentNode);
+            }
+        </script>
+        <script>
+            var monthInput = document.getElementById("date");
+            monthInput.addEventListener("change", function() {
+                var date = monthInput.value;
+                var currentUrl = window.location.href;
+                var urlWithMonth = location.protocol + '//' + location.host + location.pathname + "?date=" + encodeURIComponent(date);
+                window.location.href = urlWithMonth;
+            });
+        </script>
+
+    </body>
+</html>

@@ -16,6 +16,10 @@ public class ScheduleService {
         return scheduleRepository.findByDateBetween(firstDate, lastDate);
     }
 
+    public List<Schedule> findByDate(Date date) {
+        return scheduleRepository.findByDate(date);
+    }
+
     public Schedule addOrUpdate(Schedule employeeSalary) {
         return scheduleRepository.save(employeeSalary);
     }

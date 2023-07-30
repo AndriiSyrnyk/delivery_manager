@@ -28,5 +28,6 @@ public class Client {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "client")
+
     private List<Delivery> deliveries;
 }

@@ -10,13 +10,14 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.Date;
+import java.sql.Time;
 
 @Data
 @Entity
 public class Delivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -45,11 +46,11 @@ public class Delivery {
     private Date date;
 
     @Column(name = "creation_time")
-    private String creationTime;
+    private Time creationTime;
 
     @Column(name = "ready_time")
-    private String readyTime;
+    private Time readyTime;
 
     @Column(name = "delivery_time")
-    private String deliveryTime;
+    private Time deliveryTime;
 }
