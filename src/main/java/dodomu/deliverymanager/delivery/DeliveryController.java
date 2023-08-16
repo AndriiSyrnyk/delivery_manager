@@ -2,13 +2,17 @@ package dodomu.deliverymanager.delivery;
 
 import dodomu.deliverymanager.client.Client;
 import dodomu.deliverymanager.client.ClientService;
+import dodomu.deliverymanager.client.ClientUtil;
 import dodomu.deliverymanager.employee.Employee;
 import dodomu.deliverymanager.employee.EmployeeService;
+import dodomu.deliverymanager.employee.EmployeeUtil;
 import dodomu.deliverymanager.locality.Locality;
 import dodomu.deliverymanager.locality.LocalityService;
+import dodomu.deliverymanager.locality.LocalityUtil;
 import dodomu.deliverymanager.schedule.ScheduleService;
 import dodomu.deliverymanager.street.Street;
 import dodomu.deliverymanager.street.StreetService;
+import dodomu.deliverymanager.street.StreetUtil;
 import dodomu.deliverymanager.utils.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -74,28 +78,29 @@ public class DeliveryController {
     }
 
     @PostMapping("/editClient")
-    public ResponseEntity<String> editClient(Integer deliveryId, Integer clientId) {
+    public ResponseEntity<String> editClient(Integer deliveryId, String clientName) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        final Client client = clientId == null ? null : clientService.getById(clientId);
+        Client client = ClientUtil.getClientByName(clientService.getAll(), clientName);
         delivery.setClient(client);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }
 
     @PostMapping("/editLocality")
-    public ResponseEntity<String> editLocality(Integer deliveryId, Integer localityId) {
+    public ResponseEntity<String> editLocality(Integer deliveryId, String localityName) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        delivery.setLocality(localityService.getById(localityId));
+        Locality locality = LocalityUtil.getLocalityByName(localityService.getAll(), localityName);
+        delivery.setLocality(locality);
         delivery.setStreet(null);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }
 
     @PostMapping("/editStreet")
-    public ResponseEntity<String> editStreet(Integer deliveryId, Integer streetId) {
+    public ResponseEntity<String> editStreet(Integer deliveryId, String streetName) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        final Street client = streetId == null ? null : streetService.getById(streetId);
-        delivery.setStreet(client);
+        Street street = StreetUtil.getStreetByName(streetService.getAll(), streetName);
+        delivery.setStreet(street);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }
@@ -128,9 +133,9 @@ public class DeliveryController {
     }
 
     @PostMapping("/editEmployee")
-    public ResponseEntity<String> editEmployee(Integer deliveryId, Integer employeeId) {
+    public ResponseEntity<String> editEmployee(Integer deliveryId, String employeeName) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        final Employee employee = employeeId == null ? null : employeeService.getById(employeeId);
+        Employee employee = EmployeeUtil.getEmployeeByName(employeeService.getAll(), employeeName);
         delivery.setEmployee(employee);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");

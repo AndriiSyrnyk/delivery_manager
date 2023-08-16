@@ -32,113 +32,143 @@
                 </nav>
                 <main class="content px-3 py-2">
                     <div class="container-fluid">
-                        <div class="mb-3">
-                            <table class="table table-light table-striped" style="width:800px">
-                                <thead>
-                                <tr>
-                                    <th scope="col" style="width:10%">
-                                        <form action="/delivery/add100">
-                                            <input type="hidden" name="date" th:value="${date}" />
-                                            <button type="submit" class="btn btn-success" href="/delivery/add100">+</button>
-                                        </form>
-                                    </th>
-                                    <th scope="col" style="width:20%">Заклад</th>
-                                    <th scope="col" style="width:15%">Населений пункт</th>
-                                    <th scope="col" style="width:20%">Вулиця</th>
-                                    <th scope="col" style="width:5%"></th>
-                                    <th scope="col" style="width:5%"></th>
-                                    <th scope="col" style="width:5%"></th>
-                                    <th scope="col" style="width:20%">Кур'єр</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="delivery, iterStat : ${deliveries}">
-                                        <td th:text="${iterStat.index + 1}"></td>
-                                        <td>
-                                            <form action="/delivery/editClient" method="post">
-                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                <select class="form-select" style="width: 135px" id="clientId" name="clientId"
-                                                        onchange="clientChange(this, this.value, this.getAttribute('data-delivery-id'))"
-                                                        th:data-delivery-id="${delivery.id}" onfocus="getFocus(this.value)">
-                                                    <option value="">-- Select Client --</option>
-                                                    <option th:each="client : ${clients}"
-                                                            th:value="${client.id}"
-                                                            th:text="${client.name}"
-                                                            th:selected="${delivery.client != null and client.id == delivery.client.id}">
-                                                    </option>
-                                                </select>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action="/delivery/editLocality" method="post">
-                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                <select class="form-select" style="width: 135px" id="localityId" name="localityId"
-                                                        onchange="localityChange(this, this.value,
-                                                                                 this.getAttribute('data-delivery-id'))"
-                                                                                 th:data-delivery-id="${delivery.id}">
-                                                    <option th:each="locality : ${localities}"
-                                                            th:value="${locality.id}"
-                                                            th:text="${locality.name}"
-                                                            th:selected="${locality.id == delivery.locality.id}">
-                                                    </option>
-                                                </select>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action="/delivery/editStreet" method="post">
-                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                <select class="form-select" style="width: 150px" th:id="'streetId-' + ${delivery.id}"
-                                                        th:name="streetId" onchange="streetChange(this)">
-                                                    <option value="">-- Select Street --</option>
-                                                    <option th:each="street : ${localitiesMap.get(delivery.locality.id).streets}"
-                                                            th:value="${street.id}"
-                                                            th:text="${street.name}"
-                                                            th:selected="${delivery.street != null and street.id == delivery.street.id}">
-                                                    </option>
-                                                </select>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action="/delivery/editCreationTime" method="post">
-                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                <input class="form-control" style="width: auto;" type="time" th:id="'creationTime-' + ${delivery.id}"
-                                                       name="creationTime" th:value="${delivery.creationTime}"
-                                                       onblur="creationTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action="/delivery/editReadyTime" method="post">
-                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                <input class="form-control" style="width: auto;" type="time" th:id="'readyTime-' + ${delivery.id}"
-                                                       name="readyTime" th:value="${delivery.readyTime}"
-                                                       onblur="readyTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action="/delivery/editDeliveryTime" method="post">
-                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                <input class="form-control" style="width: auto;" type="time" th:id="'deliveryTime-' + ${delivery.id}"
-                                                       name="deliveryTime" th:value="${delivery.deliveryTime}"
-                                                       onblur="deliveryTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action="/delivery/editEmployee" method="post">
-                                                <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                <select class="form-select" style="width: 150px" th:id="'employeeId-' + ${delivery.id}"
-                                                        th:name="employeeId" onchange="employeeChange(this)">
-                                                    <option value="">-- Select Employee --</option>
-                                                    <option th:each="employee : ${employees}"
-                                                            th:value="${employee.id}"
-                                                            th:text="${employee.name}"
-                                                            th:selected="${delivery.employee != null and employee.id == delivery.employee.id}">
-                                                    </option>
-                                                </select>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <table class="table table-light table-striped" style="width:900px">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col" style="width:10%">
+                                                <form action="/delivery/add100">
+                                                    <input type="hidden" name="date" th:value="${date}" />
+                                                    <button type="submit" class="btn btn-success" href="/delivery/add100">+</button>
+                                                </form>
+                                            </th>
+                                            <th scope="col" style="width:20%">Заклад</th>
+                                            <th scope="col" style="width:15%">Населений пункт</th>
+                                            <th scope="col" style="width:20%">Вулиця</th>
+                                            <th scope="col" style="width:5%"></th>
+                                            <th scope="col" style="width:5%"></th>
+                                            <th scope="col" style="width:5%"></th>
+                                            <th scope="col" style="width:20%">Кур'єр</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="delivery, iterStat : ${deliveries}">
+                                                <td th:text="${iterStat.index + 1}"></td>
+                                                <td>
+                                                    <form action="/delivery/editClient" method="post">
+                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                        <input class="form-control" list="clientOptions" style="width: 140px" type="text"
+                                                               th:value="${delivery.client != null ? delivery.client.name : ''}"
+                                                               th:id="'clientList-' + ${delivery.id}" th:name="clientName" th:data-delivery-id="${delivery.id}"
+                                                               onfocus="clientFocus(this)" onblur="clientOnblur(this, this.getAttribute('data-delivery-id'))"
+                                                               onchange="removeFocus(this)" onfocusout="saveSelectedListValue(this)"
+                                                               onkeydown="onClientInputKeyDown(this, event)">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form action="/delivery/editLocality" method="post">
+                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                        <input class="form-control" list="localityOptions" style="width: 120px" type="text"
+                                                               th:value="${delivery.locality != null ? delivery.locality.name : ''}"
+                                                               th:id="'localityList-' + ${delivery.id}" th:name="localityName" th:data-delivery-id="${delivery.id}"
+                                                               onfocus="localityFocus(this)" onblur="localityOnblur(this, this.getAttribute('data-delivery-id'))"
+                                                               onchange="removeFocus(this)" onfocusout="saveSelectedListValue(this)"
+                                                               onkeydown="onLocalityInputKeyDown(this, event)">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form action="/delivery/editStreet" method="post">
+                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                        <input class="form-control" th:list="'streetOptions-' + ${delivery.locality.id}" style="width: 140px" type="text"
+                                                               th:value="${delivery.street != null ? delivery.street.name : ''}"
+                                                               th:id="'streetList-' + ${delivery.id}" th:name="streetName"
+                                                               onfocus="streetFocus(this)" onblur="streetOnblur(this)"
+                                                               onchange="removeFocus(this)" onfocusout="saveSelectedListValue(this)"
+                                                               onkeydown="onStreetInputKeyDown(this, event)">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form action="/delivery/editCreationTime" method="post">
+                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                        <input class="form-control" style="width: auto;" type="time" th:id="'creationTime-' + ${delivery.id}"
+                                                               name="creationTime" th:value="${delivery.creationTime}"
+                                                               onblur="creationTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form action="/delivery/editReadyTime" method="post">
+                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                        <input class="form-control" style="width: auto;" type="time" th:id="'readyTime-' + ${delivery.id}"
+                                                               name="readyTime" th:value="${delivery.readyTime}"
+                                                               onblur="readyTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form action="/delivery/editDeliveryTime" method="post">
+                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                        <input class="form-control" style="width: auto;" type="time" th:id="'deliveryTime-' + ${delivery.id}"
+                                                               name="deliveryTime" th:value="${delivery.deliveryTime}"
+                                                               onblur="deliveryTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form action="/delivery/editEmployee" method="post">
+                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                                        <input class="form-control" list="employeeOptions" style="width: 140px" type="text"
+                                                               th:value="${delivery.employee != null ? delivery.employee.name : ''}"
+                                                               th:id="'employeeList-' + ${delivery.id}" th:name="employeeName"
+                                                               onfocus="employeeFocus(this)" onblur="employeeOnblur(this)"
+                                                               onchange="removeFocus(this)" onfocusout="saveSelectedListValue(this)"
+                                                               onkeydown="onEmployeeInputKeyDown(this, event)">
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <datalist id="clientOptions">
+                                        <option th:each="client : ${clients}" th:value="${client.name}">
+                                        </option>
+                                    </datalist>
+                                    <datalist id="localityOptions">
+                                        <option th:each="locality : ${localities}" th:value="${locality.name}">
+                                        </option>
+                                    </datalist>
+                                    <div th:each="locality : ${localities}">
+                                        <datalist th:id="'streetOptions-' + ${locality.id}">
+                                            <option th:each="street : ${locality.streets}" th:value="${street.name}"></option>
+                                        </datalist>
+                                    </div>
+                                    <datalist id="employeeOptions">
+                                        <option th:each="employee : ${employees}" th:value="${employee.name}">
+                                        </option>
+                                    </datalist>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <table class="table table-light table-striped" style="width:600px">
+                                        <table>
+                                            <tr>
+                                                <th>Company</th>
+                                                <th>Contact</th>
+                                                <th>Country</th>
+                                            </tr>
+                                            <tr>
+                                                <td>Alfreds Futterkiste</td>
+                                                <td>Maria Anders</td>
+                                                <td>Germany</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Centro comercial Moctezuma</td>
+                                                <td>Francisco Chang</td>
+                                                <td>Mexico</td>
+                                            </tr>
+                                        </table>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </main>
@@ -160,6 +190,35 @@
                 },
                 /*[/]*/
             ];
+
+            var employeesArray = [
+                    /*[# th:each="employee : ${employees}"]*/
+                    {
+                        id: [[${employee.id}]],
+                        name: /*[[${employee.name.replaceAll("'", "\\\\'")}]]*/,
+                    },
+                    /*[/]*/
+                ];
+            /*]]>*/
+
+            var localitiesArray = [
+                    /*[# th:each="locality : ${localities}"]*/
+                    {
+                        id: [[${locality.id}]],
+                        name: /*[[${locality.name.replaceAll("'", "\\\\'")}]]*/,
+                    },
+                    /*[/]*/
+                ];
+            /*]]>*/
+
+            var clientsArray = [
+                    /*[# th:each="client : ${clients}"]*/
+                    {
+                        id: [[${client.id}]],
+                        name: /*[[${client.name.replaceAll("'", "\\\\'")}]]*/,
+                    },
+                    /*[/]*/
+                ];
             /*]]>*/
         </script>
         <script>
@@ -179,52 +238,6 @@
 
                 xhr.open("POST", form.action, true);
                 xhr.send(formData);
-            }
-
-            var previousClientId;
-
-            function getFocus(clientId) {
-                previousClientId = clientId;
-            }
-
-            function clientChange(selectElement, currentClientId, deliveryId) {
-                var creationTimeTag = document.querySelector("#creationTime-" + deliveryId);
-                var creationTime = creationTimeTag.value;
-                if (previousClientId === "" && creationTime === "") {
-                    var now = new Date();
-                    var formattedTime = padZero(now.getHours()) + ":" + padZero(now.getMinutes());
-                    creationTimeTag.value = formattedTime;
-                }
-                previousClientId = currentClientId;
-                submitForm(selectElement.parentNode);
-            }
-
-            function padZero(number) {
-                return number < 10 ? "0" + number : number;
-            }
-
-            function localityChange(selectElement, localityId, deliveryId) {
-                var form = selectElement.parentNode; // Get the parent form
-                submitForm(form);
-
-                var streetsSelect = document.querySelector("#streetId-" + deliveryId); // Get the streets dropdown element
-                streetsSelect.innerHTML = "";
-                var option = document.createElement("option");
-                option.text = "-- Select Street --";
-                streetsSelect.appendChild(option);
-
-                for (var i = 0; i < streetsArray.length; i++) {
-                    if (streetsArray[i].localityId == localityId) {
-                        var option = document.createElement("option");
-                        option.value = streetsArray[i].id;
-                        option.text = streetsArray[i].name;
-                        streetsSelect.appendChild(option);
-                    }
-                }
-            }
-
-            function streetChange(selectElement) {
-                submitForm(selectElement.parentNode);
             }
 
             function creationTimeChange(selectElement, deliveryId) {
@@ -251,8 +264,151 @@
                 }
             }
 
-            function employeeChange(selectElement) {
+            function removeFocus(inputElement) {
+                inputElement.blur();
+            }
+
+            function saveSelectedListValue(selectElement) {
                 submitForm(selectElement.parentNode);
+            }
+
+            var previousClientValue;
+            var previousLocalityValue;
+            var previousStreetValue;
+            var previousEmployeeValue;
+
+            function clientFocus(selectElement) {
+                previousClientValue = setPreviousValue(selectElement, previousClientValue);
+            }
+
+            function localityFocus(selectElement) {
+                previousLocalityValue = setPreviousValue(selectElement, previousLocalityValue);
+            }
+
+            function streetFocus(selectElement) {
+                previousStreetValue = setPreviousValue(selectElement, previousStreetValue);
+            }
+
+            function employeeFocus(selectElement) {
+                previousEmployeeValue = setPreviousValue(selectElement, previousEmployeeValue);
+            }
+
+            function setPreviousValue(selectElement, previousValue) {
+                previousValue = selectElement.value;
+                selectElement.value = "";
+                selectElement.placeholder = previousValue;
+                return previousValue;
+            }
+
+            function clientOnblur(selectElement, deliveryId) {
+                backPreviousValue(selectElement, isValuePresentInList(clientsArray, selectElement.value), previousClientValue);
+                setCreationTime(deliveryId, selectElement.value);
+            }
+
+            function setCreationTime(deliveryId, currentClientName) {
+                var creationTimeTag = document.querySelector("#creationTime-" + deliveryId);
+                if (previousClientValue === "" && creationTimeTag.value === "" && currentClientName !== "") {
+                    var now = new Date();
+                    var formattedTime = padZero(now.getHours()) + ":" + padZero(now.getMinutes());
+                    creationTimeTag.value = formattedTime;
+                }
+            }
+
+            function padZero(number) {
+                return number < 10 ? "0" + number : number;
+            }
+
+            function employeeOnblur(selectElement) {
+                backPreviousValue(selectElement, isValuePresentInList(employeesArray, selectElement.value), previousEmployeeValue);
+            }
+
+            function streetOnblur(selectElement) {
+                backPreviousValue(selectElement, isValuePresentInList(streetsArray, selectElement.value), previousStreetValue);
+            }
+
+            function localityOnblur(selectElement, deliveryId) {
+                backPreviousValue(selectElement, isValuePresentInList(localitiesArray, selectElement.value), previousLocalityValue);
+                if (selectElement.value !== previousLocalityValue) {
+                    changeStreetsList(deliveryId, getIdByName(localitiesArray, selectElement.value));
+                }
+            }
+
+            function getIdByName(array, name) {
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i].name.toLowerCase() == name.toLowerCase()) {
+                        return array[i].id;
+                    }
+                }
+                return 0;
+            }
+
+            function changeStreetsList(deliveryId, localityId) {
+                var streetInput = document.querySelector("#streetList-" + deliveryId);
+                streetInput.setAttribute("list", "streetOptions-" + localityId);
+                streetInput.value = "";
+            }
+
+            function backPreviousValue(selectElement, isValuePresent, previousValue) {
+                if (selectElement.value === "" || isValuePresent === false) {
+                    selectElement.removeAttribute("placeholder");
+                    selectElement.value = previousValue;
+                }
+            }
+
+            function isValuePresentInList(array, value) {
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i].name.toLowerCase() === value.toLowerCase()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function onEmployeeInputKeyDown(inputElement, event) {
+                if (event.key === "Tab") {
+                    autoFillInput(inputElement, employeesArray);
+                }
+                else if (event.key === "Delete") {
+                    previousEmployeeValue = "";
+                    inputElement.removeAttribute("placeholder");
+                }
+            }
+
+            function onClientInputKeyDown(inputElement, event) {
+                if (event.key === "Tab") {
+                    autoFillInput(inputElement, clientsArray);
+                }
+                else if (event.key === "Delete") {
+                    previousClientValue = "";
+                    inputElement.removeAttribute("placeholder");
+                }
+            }
+
+            function onLocalityInputKeyDown(inputElement, event) {
+                if (event.key === "Tab") {
+                    autoFillInput(inputElement, localitiesArray);
+                }
+            }
+
+            function onStreetInputKeyDown(inputElement, event) {
+                if (event.key === "Tab") {
+                    autoFillInput(inputElement, streetsArray);
+                }
+                else if (event.key === "Delete") {
+                    previousStreetValue = "";
+                    inputElement.removeAttribute("placeholder");
+                }
+            }
+
+            function autoFillInput(input, array) {
+                var inputValue = input.value;
+                if (inputValue === "") {
+                    inputValue = input.placeholder;
+                }
+                var matchingEmployee = array.find(employee => employee.name.toLowerCase().startsWith(inputValue.toLowerCase()));
+                if (inputValue !== "" && matchingEmployee !== undefined) {
+                    input.value = matchingEmployee.name;
+                }
             }
         </script>
         <script>

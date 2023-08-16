@@ -2,11 +2,8 @@ package dodomu.deliverymanager.delivery;
 
 import dodomu.deliverymanager.employee.Employee;
 import dodomu.deliverymanager.locality.Locality;
-import dodomu.deliverymanager.locality.LocalityService;
 import dodomu.deliverymanager.schedule.Schedule;
-import dodomu.deliverymanager.street.Street;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
