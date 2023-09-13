@@ -3,9 +3,7 @@ package dodomu.deliverymanager.delivery;
 import dodomu.deliverymanager.client.Client;
 import dodomu.deliverymanager.client.ClientService;
 import dodomu.deliverymanager.client.ClientUtil;
-import dodomu.deliverymanager.employee.Employee;
-import dodomu.deliverymanager.employee.EmployeeService;
-import dodomu.deliverymanager.employee.EmployeeUtil;
+import dodomu.deliverymanager.employee.*;
 import dodomu.deliverymanager.locality.Locality;
 import dodomu.deliverymanager.locality.LocalityService;
 import dodomu.deliverymanager.locality.LocalityUtil;
@@ -45,6 +43,8 @@ public class DeliveryController {
 
     private final EmployeeService employeeService;
 
+    private final EmployeeConverter employeeConverter;
+
     @GetMapping("/list")
     public ModelAndView getAll(@RequestParam(required = false) Date date) {
         if (date == null) date = DateTimeUtil.getCurrentDate();
@@ -56,6 +56,7 @@ public class DeliveryController {
         final List<Locality> localities = localityService.getAll();
         Collections.sort(deliveries, Comparator.comparing(Delivery::getId));
         final Map<Integer, Locality> localitiesMap = DeliveryViewUtil.convertLocalityListToLocalityMap(localities);
+        final List<EmployeeDeliveries> employeeDeliveries = employeeConverter.convertEmployeeListToEmployeeDeliveriesList(employees, date);
 
         ModelAndView result = new ModelAndView("delivery/list");
         result.addObject("date", date);
@@ -65,6 +66,7 @@ public class DeliveryController {
         result.addObject("streets", streets);
         result.addObject("localities", localities);
         result.addObject("localitiesMap", localitiesMap);
+        result.addObject("employeeDeliveries", employeeDeliveries);
 
         return result;
     }
@@ -78,18 +80,20 @@ public class DeliveryController {
     }
 
     @PostMapping("/editClient")
-    public ResponseEntity<String> editClient(Integer deliveryId, String clientName) {
+    public ResponseEntity<String> editClient(Integer deliveryId, String value, String creationTime) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        Client client = ClientUtil.getClientByName(clientService.getAll(), clientName);
+        Client client = ClientUtil.getClientByName(clientService.getAll(), value);
+        final Time time = Objects.equals(creationTime, "") ? null : stringTimeToTime(creationTime);
+        delivery.setCreationTime(time);
         delivery.setClient(client);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }
 
     @PostMapping("/editLocality")
-    public ResponseEntity<String> editLocality(Integer deliveryId, String localityName) {
+    public ResponseEntity<String> editLocality(Integer deliveryId, String value) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        Locality locality = LocalityUtil.getLocalityByName(localityService.getAll(), localityName);
+        Locality locality = LocalityUtil.getLocalityByName(localityService.getAll(), value);
         delivery.setLocality(locality);
         delivery.setStreet(null);
         deliveryService.addOrUpdate(delivery);
@@ -97,46 +101,62 @@ public class DeliveryController {
     }
 
     @PostMapping("/editStreet")
-    public ResponseEntity<String> editStreet(Integer deliveryId, String streetName) {
+    public ResponseEntity<String> editStreet(Integer deliveryId, String value) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        Street street = StreetUtil.getStreetByName(streetService.getAll(), streetName);
+        Street street = StreetUtil.getStreetByName(streetService.getAll(), value);
         delivery.setStreet(street);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }
 
     @PostMapping("/editCreationTime")
-    public ResponseEntity<String> editCreationTime(Integer deliveryId, String creationTime) {
+    public ResponseEntity<String> editCreationTime(Integer deliveryId, String value) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        final Time time = Objects.equals(creationTime, "") ? null : stringTimeToTime(creationTime);
+        final Time time = Objects.equals(value, "") ? null : stringTimeToTime(value);
         delivery.setCreationTime(time);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }
 
     @PostMapping("/editReadyTime")
-    public ResponseEntity<String> editReadyTime(Integer deliveryId, String readyTime) {
+    public ResponseEntity<String> editReadyTime(Integer deliveryId, String value) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        final Time time = Objects.equals(readyTime, "") ? null : stringTimeToTime(readyTime);
+        final Time time = Objects.equals(value, "") ? null : stringTimeToTime(value);
         delivery.setReadyTime(time);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }
 
     @PostMapping("/editDeliveryTime")
-    public ResponseEntity<String> editDeliveryTime(Integer deliveryId, String deliveryTime) {
+    public ResponseEntity<String> editDeliveryTime(Integer deliveryId, String value) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        final Time time = Objects.equals(deliveryTime, "") ? null : stringTimeToTime(deliveryTime);
+        final Time time = Objects.equals(value, "") ? null : stringTimeToTime(value);
         delivery.setDeliveryTime(time);
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }
 
     @PostMapping("/editEmployee")
-    public ResponseEntity<String> editEmployee(Integer deliveryId, String employeeName) {
+    public ResponseEntity<List<EmployeeDeliveries>> editEmployee(Integer deliveryId, String value, Date date) {
         Delivery delivery = deliveryService.getById(deliveryId);
-        Employee employee = EmployeeUtil.getEmployeeByName(employeeService.getAll(), employeeName);
+        Employee employee = EmployeeUtil.getEmployeeByName(employeeService.getAll(), value);
         delivery.setEmployee(employee);
+        deliveryService.addOrUpdate(delivery);
+        final List<Employee> employees = DeliveryViewUtil.getEmployeesFromSchedules(scheduleService.findByDate(date));
+        final List<EmployeeDeliveries> employeeDeliveries = employeeConverter.convertEmployeeListToEmployeeDeliveriesList(employees, date);
+        return ResponseEntity.ok(employeeDeliveries);
+    }
+
+    @PostMapping("/deleteAllDeliveriesFields")
+    public ResponseEntity<String> deleteAllDeliveriesFields(Integer deliveryId) {
+        Delivery delivery = deliveryService.getById(deliveryId);
+        delivery.setClient(null);
+        delivery.setCreationTime(null);
+        delivery.setReadyTime(null);
+        delivery.setDeliveryTime(null);
+        delivery.setStreet(null);
+        delivery.setEmployee(null);
+        delivery.setLocality(localityService.getRecordWithMinId());
         deliveryService.addOrUpdate(delivery);
         return ResponseEntity.ok("Edit operation successful");
     }

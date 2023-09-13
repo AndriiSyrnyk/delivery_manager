@@ -15,7 +15,10 @@
             input[type="time"]::-webkit-calendar-picker-indicator {
                 display: none;
             }
-    </style>
+            .input-cell {
+                border: none;
+                padding: 0;
+            }
         </style>
     </head>
     <body>
@@ -33,142 +36,135 @@
                 <main class="content px-3 py-2">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <table class="table table-light table-striped" style="width:900px">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col" style="width:10%">
-                                                <form action="/delivery/add100">
-                                                    <input type="hidden" name="date" th:value="${date}" />
-                                                    <button type="submit" class="btn btn-success" href="/delivery/add100">+</button>
-                                                </form>
-                                            </th>
-                                            <th scope="col" style="width:20%">Заклад</th>
-                                            <th scope="col" style="width:15%">Населений пункт</th>
-                                            <th scope="col" style="width:20%">Вулиця</th>
-                                            <th scope="col" style="width:5%"></th>
-                                            <th scope="col" style="width:5%"></th>
-                                            <th scope="col" style="width:5%"></th>
-                                            <th scope="col" style="width:20%">Кур'єр</th>
+                            <div class="col-md-5">
+                                <table class="table table-light table-striped" style="width: 760px">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            <form action="/delivery/add100">
+                                                <input type="hidden" name="date" th:value="${date}" />
+                                                <button type="submit" class="btn btn-success" href="/delivery/add100">+</button>
+                                            </form>
+                                        </th>
+                                        <th scope="col">Заклад</th>
+                                        <th scope="col">Поселення</th>
+                                        <th scope="col">Вулиця</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col">Кур'єр</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="delivery, iterStat : ${deliveries}">
+                                        <td th:text="${iterStat.index + 1}" style="width: 40px"></td>
+                                        <td style="border: none; padding: 0;">
+                                            <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                            <input class="form-control" list="clientOptions" style="width: 120px" type="text"
+                                                   th:value="${delivery.client != null ? delivery.client.name : ''}"
+                                                   th:id="'clientList-' + ${delivery.id}" th:name="clientName" th:data-delivery-id="${delivery.id}"
+                                                   onfocus="clientFocus(this)" onblur="clientOnblur(this)"
+                                                   onchange="removeFocus(this)" onfocusout="saveClient(this)"
+                                                   onkeydown="onClientInputKeyDown(this, event)">
+                                        </td>
+                                        <td style="border: none; padding: 0;">
+                                            <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                            <input class="form-control" list="localityOptions" style="width: 120px" type="text"
+                                                   th:value="${delivery.locality != null ? delivery.locality.name : ''}"
+                                                   th:id="'localityList-' + ${delivery.id}" th:name="localityName" th:data-delivery-id="${delivery.id}"
+                                                   onfocus="localityFocus(this)" onblur="localityOnblur(this)"
+                                                   onchange="removeFocus(this)" onfocusout="saveLocality(this)"
+                                                   onkeydown="onLocalityInputKeyDown(this, event)" th:disabled="${delivery.client == null}">
+                                        </td>
+                                        <td style="border: none; padding: 0;">
+                                            <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                            <input class="form-control" th:list="'streetOptions-' + ${delivery.locality.id}" style="width: 140px" type="text"
+                                                   th:value="${delivery.street != null ? delivery.street.name : ''}"
+                                                   th:id="'streetList-' + ${delivery.id}" th:name="streetName"
+                                                   onfocus="streetFocus(this)" onblur="streetOnblur(this)" th:data-delivery-id="${delivery.id}"
+                                                   onchange="removeFocus(this)" onfocusout="saveStreet(this)"
+                                                   onkeydown="onStreetInputKeyDown(this, event)" th:disabled="${delivery.client == null}">
+                                        </td>
+                                        <td style="border: none; padding: 0;">
+                                            <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                            <input class="form-control" style="width: 70px" type="time" th:id="'creationTime-' + ${delivery.id}"
+                                                   name="creationTime" th:value="${delivery.creationTime}" th:disabled="${delivery.client == null}"
+                                                   onblur="creationTimeChange(this)" th:data-delivery-id="${delivery.id}">
+                                        </td>
+                                        <td style="border: none; padding: 0;">
+                                            <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                            <input class="form-control" style="width: 70px" type="time" th:id="'readyTime-' + ${delivery.id}"
+                                                   name="readyTime" th:value="${delivery.readyTime}" th:disabled="${delivery.client == null}"
+                                                   onblur="readyTimeChange(this)" th:data-delivery-id="${delivery.id}">
+                                        </td>
+                                        <td style="border: none; padding: 0;">
+                                            <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                            <input class="form-control" style="width: 70px" type="time" th:id="'deliveryTime-' + ${delivery.id}"
+                                                   name="deliveryTime" th:value="${delivery.deliveryTime}" th:disabled="${delivery.client == null}"
+                                                   onblur="deliveryTimeChange(this)" th:data-delivery-id="${delivery.id}">
+                                        </td>
+                                        <td style="border: none; padding: 0;">
+                                            <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
+                                            <input class="form-control" list="employeeOptions" style="width: 130px" type="text"
+                                                   th:value="${delivery.employee != null ? delivery.employee.name : ''}"
+                                                   th:id="'employeeList-' + ${delivery.id}" th:name="employeeName"
+                                                   onfocus="employeeFocus(this)" onblur="employeeOnblur(this)" th:data-delivery-id="${delivery.id}"
+                                                   onchange="removeFocus(this)" onfocusout="saveEmployee(this)"
+                                                   onkeydown="onEmployeeInputKeyDown(this, event)" th:disabled="${delivery.client == null}">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-7">
+                                <table class="table table-light table-striped">
+                                    <tbody>
+                                        <tr th:each="rowNumber : ${#numbers.sequence(0, (employeeDeliveries.size() - 1) / 4)}">
+                                            <td th:each="colNumber : ${#numbers.sequence(0, 3)}" th:if="${rowNumber * 4 + colNumber < employeeDeliveries.size()}">
+                                                <div id="employeeDeliveries">
+                                                    <table class="table table-light table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    <span th:text="${employeeDeliveries[rowNumber * 4 + colNumber].name}"></span>
+                                                                </th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody th:id="'employeeDeliveryBody-' + ${employeeDeliveries[rowNumber * 4 + colNumber].id}">
+                                                            <tr th:each="delivery : ${employeeDeliveries[rowNumber * 4 + colNumber].deliveries}">
+                                                                <td>
+                                                                    <span th:text="${delivery.clientName != null ? delivery.clientName : ''}"></span>
+                                                                </td>
+                                                                <td>
+                                                                    <span th:text="${delivery.streetName != '' ? delivery.streetName : delivery.localityName}"></span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
                                         </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr th:each="delivery, iterStat : ${deliveries}">
-                                                <td th:text="${iterStat.index + 1}"></td>
-                                                <td>
-                                                    <form action="/delivery/editClient" method="post">
-                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                        <input class="form-control" list="clientOptions" style="width: 140px" type="text"
-                                                               th:value="${delivery.client != null ? delivery.client.name : ''}"
-                                                               th:id="'clientList-' + ${delivery.id}" th:name="clientName" th:data-delivery-id="${delivery.id}"
-                                                               onfocus="clientFocus(this)" onblur="clientOnblur(this, this.getAttribute('data-delivery-id'))"
-                                                               onchange="removeFocus(this)" onfocusout="saveSelectedListValue(this)"
-                                                               onkeydown="onClientInputKeyDown(this, event)">
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form action="/delivery/editLocality" method="post">
-                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                        <input class="form-control" list="localityOptions" style="width: 120px" type="text"
-                                                               th:value="${delivery.locality != null ? delivery.locality.name : ''}"
-                                                               th:id="'localityList-' + ${delivery.id}" th:name="localityName" th:data-delivery-id="${delivery.id}"
-                                                               onfocus="localityFocus(this)" onblur="localityOnblur(this, this.getAttribute('data-delivery-id'))"
-                                                               onchange="removeFocus(this)" onfocusout="saveSelectedListValue(this)"
-                                                               onkeydown="onLocalityInputKeyDown(this, event)">
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form action="/delivery/editStreet" method="post">
-                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                        <input class="form-control" th:list="'streetOptions-' + ${delivery.locality.id}" style="width: 140px" type="text"
-                                                               th:value="${delivery.street != null ? delivery.street.name : ''}"
-                                                               th:id="'streetList-' + ${delivery.id}" th:name="streetName"
-                                                               onfocus="streetFocus(this)" onblur="streetOnblur(this)"
-                                                               onchange="removeFocus(this)" onfocusout="saveSelectedListValue(this)"
-                                                               onkeydown="onStreetInputKeyDown(this, event)">
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form action="/delivery/editCreationTime" method="post">
-                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                        <input class="form-control" style="width: auto;" type="time" th:id="'creationTime-' + ${delivery.id}"
-                                                               name="creationTime" th:value="${delivery.creationTime}"
-                                                               onblur="creationTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form action="/delivery/editReadyTime" method="post">
-                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                        <input class="form-control" style="width: auto;" type="time" th:id="'readyTime-' + ${delivery.id}"
-                                                               name="readyTime" th:value="${delivery.readyTime}"
-                                                               onblur="readyTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form action="/delivery/editDeliveryTime" method="post">
-                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                        <input class="form-control" style="width: auto;" type="time" th:id="'deliveryTime-' + ${delivery.id}"
-                                                               name="deliveryTime" th:value="${delivery.deliveryTime}"
-                                                               onblur="deliveryTimeChange(this, this.getAttribute('data-delivery-id'))" th:data-delivery-id="${delivery.id}">
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form action="/delivery/editEmployee" method="post">
-                                                        <input type="hidden" th:value="${delivery.id}" name="deliveryId" />
-                                                        <input class="form-control" list="employeeOptions" style="width: 140px" type="text"
-                                                               th:value="${delivery.employee != null ? delivery.employee.name : ''}"
-                                                               th:id="'employeeList-' + ${delivery.id}" th:name="employeeName"
-                                                               onfocus="employeeFocus(this)" onblur="employeeOnblur(this)"
-                                                               onchange="removeFocus(this)" onfocusout="saveSelectedListValue(this)"
-                                                               onkeydown="onEmployeeInputKeyDown(this, event)">
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <datalist id="clientOptions">
-                                        <option th:each="client : ${clients}" th:value="${client.name}">
-                                        </option>
-                                    </datalist>
-                                    <datalist id="localityOptions">
-                                        <option th:each="locality : ${localities}" th:value="${locality.name}">
-                                        </option>
-                                    </datalist>
-                                    <div th:each="locality : ${localities}">
-                                        <datalist th:id="'streetOptions-' + ${locality.id}">
-                                            <option th:each="street : ${locality.streets}" th:value="${street.name}"></option>
-                                        </datalist>
-                                    </div>
-                                    <datalist id="employeeOptions">
-                                        <option th:each="employee : ${employees}" th:value="${employee.name}">
-                                        </option>
-                                    </datalist>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <table class="table table-light table-striped" style="width:600px">
-                                        <table>
-                                            <tr>
-                                                <th>Company</th>
-                                                <th>Contact</th>
-                                                <th>Country</th>
-                                            </tr>
-                                            <tr>
-                                                <td>Alfreds Futterkiste</td>
-                                                <td>Maria Anders</td>
-                                                <td>Germany</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Centro comercial Moctezuma</td>
-                                                <td>Francisco Chang</td>
-                                                <td>Mexico</td>
-                                            </tr>
-                                        </table>
-                                    </table>
-                                </div>
+                            <datalist id="clientOptions">
+                                <option th:each="client : ${clients}" th:value="${client.name}">
+                                </option>
+                            </datalist>
+                            <datalist id="localityOptions">
+                                <option th:each="locality : ${localities}" th:value="${locality.name}">
+                                </option>
+                            </datalist>
+                            <div th:each="locality : ${localities}">
+                                <datalist th:id="'streetOptions-' + ${locality.id}">
+                                    <option th:each="street : ${locality.streets}" th:value="${street.name}"></option>
+                                </datalist>
                             </div>
+                            <datalist id="employeeOptions">
+                                <option th:each="employee : ${employees}" th:value="${employee.name}">
+                                </option>
+                            </datalist>
                         </div>
                     </div>
                 </main>
@@ -190,9 +186,8 @@
                 },
                 /*[/]*/
             ];
-
             var employeesArray = [
-                    /*[# th:each="employee : ${employees}"]*/
+                /*[# th:each="employee : ${employees}"]*/
                     {
                         id: [[${employee.id}]],
                         name: /*[[${employee.name.replaceAll("'", "\\\\'")}]]*/,
@@ -200,9 +195,8 @@
                     /*[/]*/
                 ];
             /*]]>*/
-
             var localitiesArray = [
-                    /*[# th:each="locality : ${localities}"]*/
+                /*[# th:each="locality : ${localities}"]*/
                     {
                         id: [[${locality.id}]],
                         name: /*[[${locality.name.replaceAll("'", "\\\\'")}]]*/,
@@ -210,9 +204,8 @@
                     /*[/]*/
                 ];
             /*]]>*/
-
             var clientsArray = [
-                    /*[# th:each="client : ${clients}"]*/
+                /*[# th:each="client : ${clients}"]*/
                     {
                         id: [[${client.id}]],
                         name: /*[[${client.name.replaceAll("'", "\\\\'")}]]*/,
@@ -222,42 +215,119 @@
             /*]]>*/
         </script>
         <script>
-            function submitForm(form) {
-                var formData = new FormData(form); // Create a FormData object with form data
-                var xhr = new XMLHttpRequest();
-
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status === 200) {
-                            console.log("Form submitted successfully");
-                        } else {
-                            console.error("Form submission failed");
-                        }
-                    }
-                };
-
-                xhr.open("POST", form.action, true);
-                xhr.send(formData);
+            function updateInput(deliveryId, value, contextPath) {
+                var data = new URLSearchParams();
+                data.append("deliveryId", deliveryId);
+                data.append("value", value);
+                fetch(contextPath, {
+                    method: "POST",
+                    body: data
+                })
+                .then(response => response.text());
             }
 
-            function creationTimeChange(selectElement, deliveryId) {
-                submitForm(selectElement.parentNode);
+            function saveClient(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
+                var data = new URLSearchParams();
+                var creationTime = document.querySelector("#creationTime-" + deliveryId);
+                data.append("deliveryId", deliveryId);
+                data.append("value", selectElement.value);
+                data.append("creationTime", creationTime.value);
+                fetch("/delivery/editClient", {
+                    method: "POST",
+                    body: data
+                })
+            }
+
+            function saveLocality(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
+                updateInput(deliveryId, selectElement.value, "/delivery/editLocality");
+            }
+
+            function saveStreet(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
+                updateInput(deliveryId, selectElement.value, "/delivery/editStreet");
+            }
+
+            function saveEmployee(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
+                var data = new URLSearchParams();
+                data.append("deliveryId", deliveryId);
+                data.append("value", selectElement.value);
+                data.append("date", document.getElementById("date").value);
+                fetch("/delivery/editEmployee", {
+                    method: "POST",
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (selectElement.value !== "") updateEmployeeDeliveriesTable(data, selectElement.value);
+                    if (previousEmployeeValue !== "") updateEmployeeDeliveriesTable(data, previousEmployeeValue);
+                    if (employeeValueBeforeDelete !== "") updateEmployeeDeliveriesTable(data, employeeValueBeforeDelete);
+                    employeeValueBeforeDelete = "";
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            }
+
+            function updateEmployeeDeliveriesTable(employeeDeliveries, employeeName) {
+                employeeId = getEmployeeIdByName(employeeName);
+                var tbody = document.querySelector("#employeeDeliveryBody-" + employeeId);
+                if (tbody !== null) { tbody.innerHTML = ""; }
+                populateTableBody(employeeDeliveries, tbody, employeeId);
+            }
+
+            function populateTableBody(employeeDeliveries, tbody, employeeId) {
+                for (var i = 0; i < employeeDeliveries.length; i++) {
+                    if (employeeDeliveries[i].id == employeeId) {
+                        for(var j = 0; j < employeeDeliveries[i].deliveries.length; j++) {
+                            var row = document.createElement("tr");
+                            var clientCell = document.createElement("td");
+                            clientCell.textContent = employeeDeliveries[i].deliveries[j].clientName;
+                            row.appendChild(clientCell);
+                            var streetCell = document.createElement("td");
+                            streetCell.textContent = employeeDeliveries[i].deliveries[j].streetName || employeeDeliveries[i].deliveries[j].localityName;
+                            row.appendChild(streetCell);
+                            tbody.appendChild(row);
+                        }
+                    }
+                }
+            }
+
+            function getEmployeeIdByName(employeeName) {
+                var employee = employeesArray.find(function (emp) {
+                    return emp.name === employeeName;
+                });
+                if (employee) {
+                    return employee.id;
+                } else {
+                    return 0;
+                }
+            }
+
+            function creationTimeChange(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
+                updateInput(deliveryId, selectElement.value, "/delivery/editCreationTime");
                 var timeSelect = document.querySelector("#creationTime-" + deliveryId);
                 if (timeSelect.value === "") {
                     timeSelect.value = "";
                 }
             }
 
-            function readyTimeChange(selectElement, deliveryId) {
-                submitForm(selectElement.parentNode);
+            function readyTimeChange(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
+                updateInput(deliveryId, selectElement.value, "/delivery/editReadyTime");
                 var timeSelect = document.querySelector("#readyTime-" + deliveryId);
                 if (timeSelect.value === "") {
                     timeSelect.value = "";
                 }
             }
 
-            function deliveryTimeChange(selectElement, deliveryId) {
-                submitForm(selectElement.parentNode);
+            function deliveryTimeChange(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
+                updateInput(deliveryId, selectElement.value, "/delivery/editDeliveryTime");
                 var timeSelect = document.querySelector("#deliveryTime-" + deliveryId);
                 if (timeSelect.value === "") {
                     timeSelect.value = "";
@@ -266,10 +336,6 @@
 
             function removeFocus(inputElement) {
                 inputElement.blur();
-            }
-
-            function saveSelectedListValue(selectElement) {
-                submitForm(selectElement.parentNode);
             }
 
             var previousClientValue;
@@ -300,9 +366,41 @@
                 return previousValue;
             }
 
-            function clientOnblur(selectElement, deliveryId) {
+            function clientOnblur(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
                 backPreviousValue(selectElement, isValuePresentInList(clientsArray, selectElement.value), previousClientValue);
                 setCreationTime(deliveryId, selectElement.value);
+                if(selectElement.value !== "") enableAllElements(deliveryId);
+            }
+
+            function disableAllElements(deliveryId) {
+                var streetInput = document.querySelector("#streetList-" + deliveryId);
+                var creationTimeInput = document.querySelector("#creationTime-" + deliveryId);
+                var readyTimeInput = document.querySelector("#readyTime-" + deliveryId);
+                var deliveryTimeInput = document.querySelector("#deliveryTime-" + deliveryId);
+                var employeeInput = document.querySelector("#employeeList-" + deliveryId);
+                var localityInput = document.querySelector("#localityList-" + deliveryId);
+                streetInput.disabled = true;
+                creationTimeInput.disabled = true;
+                readyTimeInput.disabled = true;
+                deliveryTimeInput.disabled = true;
+                employeeInput.disabled = true;
+                localityInput.disabled = true;
+            }
+
+            function enableAllElements(deliveryId) {
+                var streetInput = document.querySelector("#streetList-" + deliveryId);
+                var creationTimeInput = document.querySelector("#creationTime-" + deliveryId);
+                var readyTimeInput = document.querySelector("#readyTime-" + deliveryId);
+                var deliveryTimeInput = document.querySelector("#deliveryTime-" + deliveryId);
+                var employeeInput = document.querySelector("#employeeList-" + deliveryId);
+                var localityInput = document.querySelector("#localityList-" + deliveryId);
+                streetInput.disabled = false;
+                creationTimeInput.disabled = false;
+                readyTimeInput.disabled = false;
+                deliveryTimeInput.disabled = false;
+                employeeInput.disabled = false;
+                localityInput.disabled = false;
             }
 
             function setCreationTime(deliveryId, currentClientName) {
@@ -326,7 +424,8 @@
                 backPreviousValue(selectElement, isValuePresentInList(streetsArray, selectElement.value), previousStreetValue);
             }
 
-            function localityOnblur(selectElement, deliveryId) {
+            function localityOnblur(selectElement) {
+                deliveryId = selectElement.getAttribute('data-delivery-id');
                 backPreviousValue(selectElement, isValuePresentInList(localitiesArray, selectElement.value), previousLocalityValue);
                 if (selectElement.value !== previousLocalityValue) {
                     changeStreetsList(deliveryId, getIdByName(localitiesArray, selectElement.value));
@@ -364,24 +463,65 @@
                 return false;
             }
 
+            var employeeValueBeforeDelete = "";
+
             function onEmployeeInputKeyDown(inputElement, event) {
                 if (event.key === "Tab") {
                     autoFillInput(inputElement, employeesArray);
                 }
                 else if (event.key === "Delete") {
-                    previousEmployeeValue = "";
-                    inputElement.removeAttribute("placeholder");
+                    deleteEmployee(inputElement);
                 }
             }
 
+            function deleteEmployee(inputElement) {
+                deliveryId = inputElement.getAttribute('data-delivery-id');
+                employeeValueBeforeDelete = previousEmployeeValue;
+                saveEmployee(inputElement);
+                previousEmployeeValue = "";
+                inputElement.removeAttribute("placeholder");
+            }
+
             function onClientInputKeyDown(inputElement, event) {
+                deliveryId = inputElement.getAttribute('data-delivery-id');
                 if (event.key === "Tab") {
                     autoFillInput(inputElement, clientsArray);
                 }
                 else if (event.key === "Delete") {
                     previousClientValue = "";
                     inputElement.removeAttribute("placeholder");
+
+                    var employeeInput = document.querySelector("#employeeList-" + deliveryId);
+                    previousEmployeeValue = employeeInput.value;
+                    employeeInput.value = "";
+                    deleteEmployee(employeeInput);
+                    deleteAllDeliveryFields(deliveryId);
+                    disableAllElements(deliveryId);
                 }
+            }
+
+            function deleteAllDeliveryFields(deliveryId) {
+                var streetInput = document.querySelector("#streetList-" + deliveryId);
+                var creationTimeInput = document.querySelector("#creationTime-" + deliveryId);
+                var readyTimeInput = document.querySelector("#readyTime-" + deliveryId);
+                var deliveryTimeInput = document.querySelector("#deliveryTime-" + deliveryId);
+                //var employeeInput = document.querySelector("#employeeList-" + deliveryId);
+                var localityInput = document.querySelector("#localityList-" + deliveryId);
+
+                streetInput.value = "";
+                creationTimeInput.value = "";
+                readyTimeInput.value = "";
+                deliveryTimeInput.value = "";
+                //employeeInput.value = "";
+                localityInput.value = localitiesArray[0].name;
+
+                var data = new URLSearchParams();
+                data.append("deliveryId", deliveryId);
+                fetch("/delivery/deleteAllDeliveriesFields", {
+                    method: "POST",
+                    body: data
+                })
+                .then(response => response.text());
             }
 
             function onLocalityInputKeyDown(inputElement, event) {
